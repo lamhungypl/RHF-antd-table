@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import './index.scss';
 import { Table, Button, Tooltip, Row, Col } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, useForm, UseFormMethods } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 import clsx from 'clsx';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -17,7 +17,7 @@ interface ColumnAction {
   onDelete: (...params: any) => void;
   onValidateQuantity: (...params: any) => any;
 }
-const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
+const useColumn = (actions: ColumnAction, tableForm: UseFormMethods<any>) => {
   const { onDelete, onValidateQuantity } = actions;
   const columns = React.useMemo<ColumnsType<any>>(
     () => [
@@ -65,7 +65,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
             <div>
               <div style={{ position: 'relative' }}>
                 <Controller
-                  render={({ field: { onChange, ...renderProps } }) => {
+                  render={({ onChange, ...renderProps }) => {
                     return (
                       <NumberFormat
                         {...renderProps}
@@ -135,7 +135,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
             >
               <div style={{ position: 'relative' }}>
                 <Controller
-                  render={({ field: { onChange, ...renderProps } }) => {
+                  render={({ onChange, ...renderProps }) => {
                     return (
                       <NumberFormat
                         {...renderProps}
@@ -285,7 +285,7 @@ const AppTable = () => {
             <div>
               <span>Shipping Controller:</span>
               <Controller
-                render={({ field: { onChange, ...renderProps } }) => {
+                render={({ onChange, ...renderProps }) => {
                   return (
                     <NumberFormat
                       {...renderProps}
@@ -328,7 +328,7 @@ const AppTable = () => {
           <Col span={12}>
             <div>
               <label htmlFor="name">Name</label>
-              <input {...form.register('name', { required: 'name is required' })} placeholder="name" />
+              <input name="name" ref={form.register({ required: 'name is required' })} placeholder="name" />
               <ErrorMessage errors={form.formState.errors} name="name" render={({ message }) => <p>{message}</p>} />
             </div>
           </Col>
@@ -338,7 +338,8 @@ const AppTable = () => {
             <div>
               <span>Shipping input:</span>
               <input
-                {...form.register('shippingDaysInput', {
+                name="shippingDaysInput"
+                ref={form.register({
                   validate: {
                     required: data => {
                       console.log({ data, mode });
