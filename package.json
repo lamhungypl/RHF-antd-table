@@ -2,7 +2,7 @@
   "name": "react-hook-form-handlesubmit-ant-table",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://tomerpacific.github.io/RHF-antd-table/",
+  "homepage": "https://lamhungypl.github.io/RHF-antd-table/",
   "dependencies": {
     "@hookform/error-message": "^2.0.0",
     "@testing-library/jest-dom": "^5.12.0",
