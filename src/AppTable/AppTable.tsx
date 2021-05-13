@@ -242,6 +242,7 @@ const AppTable = () => {
   const [mode, setMode] = useState('send');
   const [formValues, setFormValues] = useState('');
   const [formErrors, setFormErrors] = useState('');
+  const [temp, setTemp] = useState('');
 
   const deleteRow = () => {};
 
@@ -310,7 +311,8 @@ const AppTable = () => {
                 rules={{
                   validate: {
                     required: data => {
-                      console.log({ data, mode });
+                      setTemp(JSON.stringify(data));
+
                       if (mode === 'send') {
                         // not empty and gt 1
                         return !toNumber(data) ? `${JSON.stringify(data)}invalidDays` : undefined;
@@ -323,7 +325,9 @@ const AppTable = () => {
               />
               <span> day</span>
             </div>
+
             <ErrorMessage errors={form.formState.errors} name="shippingDays" />
+            <div>Shipping Controller validate: {temp}</div>
           </Col>
           <Col span={12}>
             <div>
