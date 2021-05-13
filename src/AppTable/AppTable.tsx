@@ -8,7 +8,7 @@ import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 import clsx from 'clsx';
 import { DeleteOutlined } from '@ant-design/icons';
-import { get, toNumber } from 'lodash';
+import { get, isArray, map, toNumber } from 'lodash';
 import { Images } from './constant';
 import { validateRow } from './utils';
 import { ErrorMessage } from '@hookform/error-message';
@@ -240,6 +240,8 @@ const AppTable = () => {
   const form = useForm({ mode: 'onBlur' });
 
   const [mode, setMode] = useState('send');
+  const [formValues, setFormValues] = useState('');
+  const [formErrors, setFormErrors] = useState('');
 
   const deleteRow = () => {};
 
@@ -252,17 +254,27 @@ const AppTable = () => {
   );
   const onFail = (error: any) => {
     console.log(error);
+    const errorValues = map(error, err => {
+      const { message, type } = err;
+      return { message, type };
+    });
+    console.log(JSON.stringify(errorValues, undefined, 2));
+    setFormErrors(JSON.stringify(errorValues, undefined, 2));
   };
   const onEdit = () => {
     setMode('edit');
     form.handleSubmit(data => {
       console.log({ data });
+      setFormValues(JSON.stringify(data, undefined, 2));
+      setFormErrors('');
     }, onFail)();
   };
   const onSent = () => {
     setMode('send');
     form.handleSubmit(data => {
       console.log({ data });
+      setFormValues(JSON.stringify(data, undefined, 2));
+      setFormErrors('');
     }, onFail)();
   };
   return (
@@ -274,7 +286,18 @@ const AppTable = () => {
               <span>Shipping Controller:</span>
               <Controller
                 render={({ field: { onChange, ...renderProps } }) => {
-                  return <NumberFormat {...renderProps} decimalScale={0} isNumericString allowNegative={false} />;
+                  return (
+                    <NumberFormat
+                      {...renderProps}
+                      onValueChange={value => {
+                        onChange();
+                        form.setValue('shippingDays', value.floatValue);
+                      }}
+                      decimalScale={0}
+                      isNumericString
+                      allowNegative={false}
+                    />
+                  );
                 }}
                 // focus using ref
                 // onFocus={() => {
@@ -345,6 +368,16 @@ const AppTable = () => {
           </Col>
           <Col span={12}>
             <Button onClick={onSent}>Submit</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <div>Values</div>
+            <pre>{formValues}</pre>
+          </Col>
+          <Col span={12}>
+            <div>Errors</div>
+            <pre>{formErrors}</pre>
           </Col>
         </Row>
       </form>
