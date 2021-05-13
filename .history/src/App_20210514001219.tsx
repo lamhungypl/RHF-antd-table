@@ -15,7 +15,7 @@ import { ErrorMessage } from '@hookform/error-message';
 
 interface ColumnAction {
   onDelete: (...params: any) => void;
-  onValidateQuantity: (...params: any) => any;
+  onValidateQuantity: (...params) => any;
 }
 const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
   const { onDelete, onValidateQuantity } = actions;
@@ -251,7 +251,7 @@ const App = () => {
     },
     form
   );
-  const onFail = (error: any) => {
+  const onFail = error => {
     console.log(error);
   };
   const onEdit = () => {

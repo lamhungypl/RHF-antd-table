@@ -1,0 +1,16 @@
+.input_error {
+  content: '';
+  height: 28px;
+  width: 16px;
+  background-color: #ff3636;
+  left: -16px;
+  top: 0;
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  
+  &.waring {
+    background-color: #f0c52c;
+  }
+
+}

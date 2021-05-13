@@ -15,7 +15,7 @@ import { ErrorMessage } from '@hookform/error-message';
 
 interface ColumnAction {
   onDelete: (...params: any) => void;
-  onValidateQuantity: (...params: any) => any;
+  onValidateQuantity: (...params) => any;
 }
 const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
   const { onDelete, onValidateQuantity } = actions;
@@ -54,8 +54,8 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
         key: 'quantity',
         width: 100,
         render: (_, record, index) => {
-          const errorStatus = get(tableForm.formState.errors, `product[${index}].quantity.type`, 'default');
-          const errorMessage = get(tableForm.formState.errors, `product[${index}].quantity.message`, '');
+          const errorStatus = get(tableForm.errors, `product[${index}].quantity.type`, 'default');
+          const errorMessage = get(tableForm.errors, `product[${index}].quantity.message`, '');
           const classNames = clsx(
             'product__input',
             { error: ['required', 'quantityError'].includes(errorStatus) },
@@ -123,7 +123,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
         key: 'g',
         width: 150,
         render: (_, record, index) => {
-          const errorMessage = get(tableForm.formState.errors, `product[${index}].price.message`, '');
+          const errorMessage = get(tableForm.errors, `product[${index}].price.message`, '');
 
           return (
             <div
@@ -165,7 +165,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
                     },
                   }}
                 />
-                {get(tableForm.formState.errors, `product[${index}].price.type`, '') === 'required' && (
+                {get(tableForm.errors, `product[${index}].price.type`, '') === 'required' && (
                   <Tooltip title={errorMessage} color="red">
                     <span className="input_error" />
                   </Tooltip>
@@ -251,7 +251,7 @@ const App = () => {
     },
     form
   );
-  const onFail = (error: any) => {
+  const onFail = error => {
     console.log(error);
   };
   const onEdit = () => {

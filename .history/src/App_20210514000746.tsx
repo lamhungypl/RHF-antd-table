@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
-
+import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.scss';
 import { Table, Button, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, useForm, UseFormMethods } from 'react-hook-form';
 import NumberFormat from 'react-number-format';
 import clsx from 'clsx';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -15,9 +15,9 @@ import { ErrorMessage } from '@hookform/error-message';
 
 interface ColumnAction {
   onDelete: (...params: any) => void;
-  onValidateQuantity: (...params: any) => any;
+  onValidateQuantity: (...params) => any;
 }
-const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
+const useColumn = (actions: ColumnAction, tableForm: UseFormMethods<any>) => {
   const { onDelete, onValidateQuantity } = actions;
   const columns = React.useMemo<ColumnsType<any>>(
     () => [
@@ -54,8 +54,8 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
         key: 'quantity',
         width: 100,
         render: (_, record, index) => {
-          const errorStatus = get(tableForm.formState.errors, `product[${index}].quantity.type`, 'default');
-          const errorMessage = get(tableForm.formState.errors, `product[${index}].quantity.message`, '');
+          const errorStatus = get(tableForm.errors, `product[${index}].quantity.type`, 'default');
+          const errorMessage = get(tableForm.errors, `product[${index}].quantity.message`, '');
           const classNames = clsx(
             'product__input',
             { error: ['required', 'quantityError'].includes(errorStatus) },
@@ -65,7 +65,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
             <div>
               <div style={{ position: 'relative' }}>
                 <Controller
-                  render={({ field: { onChange, ...renderProps } }) => {
+                  render={({ onChange, ...renderProps }) => {
                     return (
                       <NumberFormat
                         {...renderProps}
@@ -123,7 +123,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
         key: 'g',
         width: 150,
         render: (_, record, index) => {
-          const errorMessage = get(tableForm.formState.errors, `product[${index}].price.message`, '');
+          const errorMessage = get(tableForm.errors, `product[${index}].price.message`, '');
 
           return (
             <div
@@ -135,7 +135,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
             >
               <div style={{ position: 'relative' }}>
                 <Controller
-                  render={({ field: { onChange, ...renderProps } }) => {
+                  render={({ onChange, ...renderProps }) => {
                     return (
                       <NumberFormat
                         {...renderProps}
@@ -165,7 +165,7 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormReturn<any>) => {
                     },
                   }}
                 />
-                {get(tableForm.formState.errors, `product[${index}].price.type`, '') === 'required' && (
+                {get(tableForm.errors, `product[${index}].price.type`, '') === 'required' && (
                   <Tooltip title={errorMessage} color="red">
                     <span className="input_error" />
                   </Tooltip>
@@ -251,7 +251,7 @@ const App = () => {
     },
     form
   );
-  const onFail = (error: any) => {
+  const onFail = error => {
     console.log(error);
   };
   const onEdit = () => {
@@ -308,12 +308,13 @@ const App = () => {
           />
           <span> day</span>
         </div>
-        <ErrorMessage errors={form.formState.errors} name="shippingDays" />
+        <ErrorMessage errors={form.errors} name="shippingDays" />
 
         <div>
           <span>Shipping input:</span>
           <input
-            {...form.register('shippingDaysInput', {
+            name="shippingDaysInput"
+            ref={form.register({
               validate: {
                 required: data => {
                   console.log({ data, mode });
@@ -332,11 +333,11 @@ const App = () => {
         </div>
         <div>
           <span>random input:</span>
-          <input {...form.register('random')} />
+          <input name="random" ref={form.register({})} />
         </div>
-        <ErrorMessage errors={form.formState.errors} name="random" />
+        <ErrorMessage errors={form.errors} name="random" />
 
-        <ErrorMessage errors={form.formState.errors} name="shippingDaysInput" />
+        <ErrorMessage errors={form.errors} name="shippingDaysInput" />
 
         <Table columns={columns} dataSource={data} pagination={false} />
 

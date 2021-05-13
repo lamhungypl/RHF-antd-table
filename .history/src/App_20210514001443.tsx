@@ -251,7 +251,7 @@ const App = () => {
     },
     form
   );
-  const onFail = (error: any) => {
+  const onFail = error => {
     console.log(error);
   };
   const onEdit = () => {
