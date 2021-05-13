@@ -1,0 +1,48 @@
+.input_error {
+  content: '';
+  height: 28px;
+  width: 16px;
+  background-color: #ff3636;
+  left: -16px;
+  top: 0;
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+
+  &.waring {
+    background-color: #f0c52c;
+  }
+}
+table {
+  width: 100%;
+  background-color: #fff;
+
+  thead > tr > th {
+    font-family: 'Open Sans';
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    color: #000;
+    font-weight: 600;
+
+    background-color: #fff;
+  }
+
+  th {
+    border-bottom: 1px solid #000;
+    padding-top: 22px;
+    padding-bottom: 6px;
+  }
+
+  td {
+    vertical-align: top;
+
+    border-bottom: 1px solid #000;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  tbody tr {
+    cursor: pointer;
+  }
+}
