@@ -70,9 +70,10 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormMethods<any>) => {
                       <NumberFormat
                         {...renderProps}
                         onValueChange={target => {
-                          onChange();
                           const afterValue = target.floatValue ? target.floatValue : 1;
-                          tableForm.setValue(`product[${index}].quantity`, afterValue);
+                          onChange(afterValue);
+
+                          // tableForm.setValue(`product[${index}].quantity`, afterValue);
                         }}
                         // forcus on validate fail not work here
                         // onFocus={(
@@ -140,9 +141,9 @@ const useColumn = (actions: ColumnAction, tableForm: UseFormMethods<any>) => {
                       <NumberFormat
                         {...renderProps}
                         onValueChange={target => {
-                          onChange();
+                          onChange(target.floatValue || 0);
 
-                          tableForm.setValue(`product[${index}].price`, target.floatValue);
+                          // tableForm.setValue(`product[${index}].price`, target.floatValue);
                         }}
                         isNumericString
                         decimalScale={2}
@@ -291,8 +292,8 @@ const AppTable = () => {
                     <NumberFormat
                       {...renderProps}
                       onValueChange={value => {
-                        onChange();
-                        form.setValue('shippingDays', value.floatValue);
+                        onChange(value.floatValue || '');
+                        // form.setValue('shippingDays', value.floatValue);
                       }}
                       decimalScale={0}
                       isNumericString
@@ -311,6 +312,7 @@ const AppTable = () => {
                 rules={{
                   validate: {
                     required: data => {
+                      console.log({ data });
                       setTemp(JSON.stringify(data));
 
                       if (mode === 'send') {
